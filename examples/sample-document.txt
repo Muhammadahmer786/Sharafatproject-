@@ -1,0 +1,3 @@
+Sentinel Lab university demonstration.
+This is synthetic, non-confidential test content.
+The recovered document should match these bytes exactly.

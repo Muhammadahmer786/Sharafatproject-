@@ -1,0 +1,2 @@
+{% extends 'base.html' %}{% from 'macros.html' import icon %}
+{% block content %}<div class="error-page"><span class="error-code">{{ code }}</span><h1>{{ title }}</h1><p>{{ message }}</p><a class="button primary" href="{{ url_for('main.dashboard') if current_user.is_authenticated else url_for('auth.login') }}">Back to workspace{{ icon('arrow') }}</a></div>{% endblock %}

@@ -1,0 +1,10 @@
+{% from 'macros.html' import icon %}
+{% macro navigation(section) %}
+<nav class="admin-tabs" aria-label="Administration">{% for key,label,ico,endpoint in [('overview','Overview','grid','dashboard'),('users','Accounts','users','users'),('activity','Activity','activity','activity'),('operations','Local server','server','operations')] %}<a class="{{ 'selected' if section==key }}" {% if section==key %}aria-current="page"{% endif %} href="{{ url_for('admin.'+endpoint) }}">{{ icon(ico) }}{{ label }}</a>{% endfor %}</nav>
+{% endmacro %}
+{% macro activity_table(events) %}
+{% if events %}<div class="table-scroll"><table class="data-table"><thead><tr><th>Activity</th><th>Performed by</th><th>Affected account</th><th>Time · UTC</th></tr></thead><tbody>{% for row in events %}{% set event=row[0] %}<tr><td><strong>{{ event.action }}</strong></td><td><a href="{{ url_for('admin.user_detail',user_id=event.user_id) }}">{{ row.actor_name }}</a><small>{{ row.actor_email }}</small></td><td>{% if row.target_name %}<a href="{{ url_for('admin.user_detail',user_id=event.target_user_id) }}">{{ row.target_name }}</a><small>{{ row.target_email }}</small>{% else %}<span class="muted">Own account</span>{% endif %}</td><td>{{ event.created_at.strftime('%d %b %Y') }}<small>{{ event.created_at.strftime('%H:%M:%S') }}</small></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="admin-empty">{{ icon('activity') }}<h3>No matching activity</h3><p>Account actions will appear here as people use the workspace.</p></div>{% endif %}
+{% endmacro %}
+{% macro pager(pagination,endpoint,q='',status='',user_id='',since='') %}
+<div class="intel-pagination"><span>{{ pagination.total }} records · Page {{ pagination.page }} of {{ pagination.pages }}</span><div>{% if pagination.page>1 %}<a class="button secondary small" href="{{ url_for(endpoint,page=pagination.page-1,q=q,status=status,user=user_id,since=since) }}">Previous</a>{% endif %}{% if pagination.page<pagination.pages %}<a class="button secondary small" href="{{ url_for(endpoint,page=pagination.page+1,q=q,status=status,user=user_id,since=since) }}">Next</a>{% endif %}</div></div>
+{% endmacro %}

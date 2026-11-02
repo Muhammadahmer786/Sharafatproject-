@@ -1,0 +1,14 @@
+{% extends 'base.html' %}{% from 'macros.html' import icon,csrf,filebox %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow muted">LOCAL REVERSE ENGINEERING</div><h1>See what is inside.</h1><p>Decompile a Windows binary with OpenBin's Ghidra extractor, on your own server.</p></div><span class="badge success">{{ icon('shield') }} Local processing</span></div>
+<div class="form-layout"><section class="panel form-panel"><div class="panel-header"><div><h2>OpenBin decompilation</h2><p>Inspect code without running the uploaded program.</p></div><span class="step-mark">01</span></div>
+<form method="post" enctype="multipart/form-data" class="padded-form" data-download-form>{{ csrf() }}
+{{ filebox('file','Windows executable','.exe,.dll','Native x86/x64 EXE or DLL · Up to 10 MiB','scan') }}
+<div class="notice">{{ icon('server') }}<p><strong>{{ 'Worker available' if worker_ready else 'Worker needs attention' }}</strong><br>{{ worker_detail }}</p></div>
+<div class="subsection-label">WHAT YOU RECEIVE</div><div class="choice-card">{{ icon('code') }}<span><strong>Local analysis JSON</strong><small>Functions, decompiled code and available metadata, linked to the file's SHA-256. Save the download to review it locally.</small></span></div>
+<div class="notice">{{ icon('info') }}<p>Allow up to six minutes, including worker startup. One decompilation runs at a time. The file and extracted code are held temporarily in memory and are not saved in your scan history.</p></div>
+<p class="form-feedback" role="status" hidden></p>
+<div class="form-footer"><span>{{ icon('lock') }}No cloud upload</span><button type="submit" class="button primary">{{ icon('scan') }}Decompile & download{{ icon('arrow') }}</button></div>
+</form></section>
+<aside class="side-stack"><section class="panel info-panel"><span class="action-icon teal">{{ icon('code') }}</span><h3>From binary to evidence</h3><ol class="steps"><li><span>1</span><div><strong>Choose an authorized file</strong><p>Use a native Windows EXE or DLL you have permission to inspect.</p></div></li><li><span>2</span><div><strong>Extract in isolation</strong><p>Ghidra analyzes the file in a container with no network access.</p></div></li><li><span>3</span><div><strong>Review the result</strong><p>Download the code and metadata, then verify any findings against the evidence.</p></div></li></ol></section><div class="note-card"><h3>Decompilation is not a verdict.</h3><p>This workflow does not run an AI model or certify that a file is safe. Reviewed findings can be imported into a matching local file scan.</p><a href="{{ url_for('main.analyze') }}">Create a matching scan {{ icon('arrow') }}</a></div></aside></div>
+{% endblock %}

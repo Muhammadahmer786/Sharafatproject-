@@ -1,0 +1,12 @@
+*
+!Dockerfile
+!worker.Dockerfile
+!ghidra.Dockerfile
+!integrations/
+!integrations/openbin_worker.py
+!requirements.lock.txt
+!run.py
+!sentinel/
+!sentinel/**
+**/__pycache__
+**/*.pyc

@@ -1,0 +1,13 @@
+<div class="analysis-updates" data-analysis-updates data-feed-url="{{ url_for('intel.updates') }}" data-owner="{{ current_user.get_id() }}"{% if check is defined %} data-watch="{{ check.id }}"{% endif %}{% if job is defined %} data-watch-ai="{{ job.id }}"{% endif %}>
+  <button type="button" class="updates-toggle" data-updates-toggle aria-expanded="false" aria-controls="analysis-updates-panel" aria-label="Analysis updates">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="updates-toggle-label">Updates</span><span class="updates-count" data-updates-count hidden>0</span>
+  </button>
+  <section id="analysis-updates-panel" class="updates-panel" data-updates-panel hidden aria-labelledby="updates-heading">
+    <div class="updates-heading"><div><h2 id="updates-heading">Analysis updates</h2><p data-updates-summary>Loading your checks…</p></div><button type="button" data-updates-read class="text-link">Mark all read</button></div>
+    <p class="updates-connection" data-updates-connection role="status" hidden></p>
+    <div class="updates-list" data-updates-list></div>
+    <a class="updates-history" href="{{ url_for('intel.history') }}">Threat intelligence history {{ icon('arrow') }}</a>
+    <a class="updates-history" href="{{ url_for('ai.history') }}">Local AI history {{ icon('arrow') }}</a>
+  </section>
+  <aside class="analysis-toast" data-updates-toast hidden aria-label="Analysis notification"><div role="status" aria-live="polite" aria-atomic="true"><strong data-toast-title></strong><p data-toast-detail></p></div><div class="analysis-toast-actions"><a data-toast-link class="text-link" href="{{ url_for('intel.history') }}">View result {{ icon('arrow') }}</a><button data-toast-dismiss type="button" class="text-link" aria-label="Dismiss analysis notification">Dismiss</button></div></aside>
+</div>

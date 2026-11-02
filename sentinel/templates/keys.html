@@ -1,0 +1,42 @@
+{% extends 'base.html' %}{% from 'macros.html' import icon,csrf,identity_check %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow muted">YOUR ENCRYPTION IDENTITY</div><h1>Your keys. Already assigned.</h1><p>Your account receives a unique public and private key automatically. View and back up your pair here.</p></div><span class="badge success">RSA · 3072 bits</span></div>
+<div class="key-explainer key-view-grid">
+  <section class="key-card">
+    <div class="key-card-heading"><span class="action-icon teal">{{ icon('key') }}</span><div><h2>Public key</h2><p>Share with someone protecting a document for you.</p></div></div>
+    {% if key %}
+    <label class="key-label" for="public-key-pem">Your public key · PEM</label>
+    <textarea class="key-pem" id="public-key-pem" rows="8" readonly spellcheck="false" autocomplete="off">{{ key.public_pem }}</textarea>
+    <div class="key-actions"><button class="button secondary" type="button" data-copy-target="public-key-pem">Copy public key</button><a class="button secondary" href="{{ url_for('main.public_key') }}">{{ icon('download') }}Download public key</a></div>
+    {% else %}<p class="key-placeholder">Your key pair will be assigned after you verify your account below.</p>{% endif %}
+  </section>
+  <section class="key-card">
+    <div class="key-card-heading"><span class="action-icon violet">{{ icon('lock') }}</span><div><h2>Private key</h2><p>Keep it private. Only your account can access it in the app.</p></div></div>
+    <div data-private-key-locked {% if private_pem %}hidden{% endif %}>
+      <div class="key-placeholder">{{ icon('lock') }}<h3>Protected in your local vault</h3><p>Verify your identity below to view an encrypted copy of your assigned private key.</p><a class="button secondary" href="#key-access">View my private key {{ icon('arrow') }}</a></div>
+    </div>
+    {% if private_pem %}
+    <div data-private-key-view>
+      <label class="key-label" for="private-key-pem">Your private key · encrypted PEM</label>
+      <textarea class="key-pem" id="private-key-pem" rows="8" readonly spellcheck="false" autocomplete="off">{{ private_pem }}</textarea>
+      <div class="key-actions"><button class="button secondary" type="button" data-copy-target="private-key-pem">Copy private key</button><a class="button secondary" href="{{ url_for('main.keys') }}">{{ icon('lock') }}Hide private key</a></div>
+      <p class="key-help">Protected with the backup passphrase you just entered. This is your existing key, not a new pair. The view clears after five minutes or when you leave this page.</p>
+    </div>
+    {% endif %}
+  </section>
+</div>
+{% if key %}<section class="panel identity-panel"><div><span class="eyebrow muted">PUBLIC KEY FINGERPRINT · SHA-256</span><p class="mono key-fingerprint">{{ key.fingerprint }}</p></div><small>Assigned {{ key.created_at.strftime('%d %b %Y') }} · Viewing and exporting keep the same key pair</small></section>{% else %}<div class="notice"><p>Your existing account will receive its assigned keys at its next successful sign-in. Verifying below also completes assignment.</p></div>{% endif %}
+<div class="form-layout">
+  <section class="panel" id="key-access">
+    <div class="panel-header"><div><h2>View or download your keys</h2><p>Verify your identity to access an encrypted copy of your private key.</p></div></div>
+    <form method="post" class="padded-form" data-download-form>
+      {{ csrf() }}{{ identity_check(current_user) }}
+      <div class="field"><label for="passphrase">Backup private-key passphrase</label><div class="password-wrap"><input name="passphrase" id="passphrase" type="password" minlength="12" maxlength="256" autocomplete="new-password" placeholder="At least 12 characters" required><button class="password-toggle" type="button" data-toggle-password="passphrase">Show</button></div><small>Protects the PEM you view, copy or download. Save this passphrase separately from your key backup.</small></div>
+      <label class="choice-card"><input type="checkbox" name="trusted_server" required><span><strong>Access keys on this trusted local server</strong><small>The server temporarily unlocks my assigned key to create an encrypted copy. The encrypted vault copy remains in my account.</small></span></label>
+      <div class="form-feedback" hidden role="status" aria-live="polite"></div>
+      <div class="form-footer key-form-actions"><button class="button secondary" type="submit" name="action" value="view">{{ icon('key') }}Show private key</button><button class="button primary" type="submit" name="action" value="download">{{ icon('download') }}Download key backup</button></div>
+    </form>
+  </section>
+  <aside class="note-card"><h3>Keep an independent backup.</h3><p>The ZIP contains your public PEM and passphrase-encrypted private PEM. Share only the public key.</p><p>The local vault depends on both the database and the original server secret. Keep your exported private key and its passphrase safe in case the server is lost.</p><p>This is a server-managed vault: the trusted machine operator controls the server secret. Application administrators cannot download your private key through their admin workspace.</p><a href="{{ url_for('main.protect') }}">Protect a document {{ icon('arrow') }}</a></aside>
+</div>
+{% endblock %}

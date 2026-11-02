@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% from 'macros.html' import csrf %}
+{% block content %}
+<div class="auth-form-side"><section class="auth-card"><span class="eyebrow muted">SENTINEL LAB · ACCOUNT SECURITY</span><h1>{{ title }}</h1>
+<form method="post" class="stack-form">{{ csrf() }}
+{% if mode=='mfa' %}<p>Enter the current six-digit code from your authenticator app.</p><div class="field"><label for="code">Authenticator code</label><input id="code" name="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required autofocus></div>
+{% else %}<p>Ask your local administrator to issue a recovery code. Codes expire in 30 minutes and work once. This does not recover document encryption keys.</p><div class="field"><label for="token">Recovery code</label><input id="token" name="token" autocomplete="off" maxlength="128" required></div><div class="field"><label for="password">New password</label><input id="password" type="password" name="password" autocomplete="new-password" minlength="12" maxlength="128" required></div><div class="field"><label for="confirm">Confirm new password</label><input id="confirm" type="password" name="confirm" autocomplete="new-password" minlength="12" maxlength="128" required></div>{% endif %}
+<button class="button primary" type="submit">{{ 'Verify & sign in' if mode=='mfa' else 'Reset password' }}</button><a class="text-link" href="{{ url_for('auth.login') }}">Back to sign in</a></form></section></div>
+{% endblock %}

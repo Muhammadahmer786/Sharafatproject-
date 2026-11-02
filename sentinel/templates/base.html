@@ -1,0 +1,35 @@
+{% from 'macros.html' import icon, csrf %}
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="csrf-token" content="{{ csrf_token() }}"><title>{{ title|default('Welcome') }} · Sentinel Lab</title><meta name="description" content="A thoughtful workspace for static file assessment and encrypted document protection."><link rel="stylesheet" href="{{ url_for('static',filename='app.css') }}"><link rel="stylesheet" href="{{ url_for('static',filename='theme.css') }}"><link rel="stylesheet" href="{{ url_for('static',filename='modern.css') }}"><script defer src="{{ url_for('static',filename='app.js') }}"></script>{% if current_user.is_authenticated %}<link rel="stylesheet" href="{{ url_for('static',filename='analysis-updates.css') }}"><script defer src="{{ url_for('static',filename='analysis-updates.js') }}"></script>{% endif %}{% block extra_head %}{% endblock %}</head>
+<body class="{{ 'app-body' if current_user.is_authenticated else 'public-body' }} page-{{ active|default('auth') }}"><a class="skip-link" href="#main-content">Skip to content</a>
+{% if current_user.is_authenticated %}
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="{{ url_for('main.dashboard') }}"><span class="brand-mark">{{ icon('shield') }}</span><span>sentinel<span class="brand-lab">lab</span><small>KNOW MORE. PROTECT BETTER.</small></span></a>
+<div class="workspace-label"><span class="workspace-icon">S</span><div>Local workspace<small>Private server</small></div><span class="workspace-dot"></span></div>
+<nav aria-label="Main navigation"><div class="nav-label">WORKSPACE</div>
+{% for key,label,ico,endpoint in [('dashboard','Overview','grid','dashboard'),('analyze','Local file analysis','scan','analyze'),('openbin','Local OpenBin','code','openbin'),('history','Scan history','history','history')] %}
+<a class="nav-item {{ 'active' if active==key }}" {% if active==key %}aria-current="page"{% endif %} href="{{ url_for('main.'+endpoint) }}">{{ icon(ico) }}<span>{{ label }}</span>{% if active==key %}<span class="nav-dot"></span>{% endif %}</a>{% endfor %}
+<a class="nav-item {{ 'active' if active=='ai' }}" {% if active=='ai' %}aria-current="page"{% endif %} href="{{ url_for('ai.workspace') }}">{{ icon('spark') }}<span>Local AI analysis</span><span class="nav-new">LOCAL</span></a>
+<a class="nav-item {{ 'active' if active=='ai-history' }}" {% if active=='ai-history' %}aria-current="page"{% endif %} href="{{ url_for('ai.history') }}">{{ icon('history') }}<span>AI analysis history</span></a>
+<div class="nav-label second">EXTERNAL INTELLIGENCE</div>
+<a class="nav-item {{ 'active' if active=='intelligence' }}" {% if active=='intelligence' %}aria-current="page"{% endif %} href="{{ url_for('intel.workspace') }}">{{ icon('globe') }}<span>Threat intelligence</span><span class="nav-new">API</span></a>
+<a class="nav-item {{ 'active' if active=='intel-history' }}" {% if active=='intel-history' %}aria-current="page"{% endif %} href="{{ url_for('intel.history') }}">{{ icon('history') }}<span>Check history</span></a>
+<div class="nav-label second">DOCUMENT SECURITY</div>
+{% for key,label,ico in [('protect','Protect document','lock'),('recover','Recover document','unlock'),('keys','Encryption keys','key')] %}
+<a class="nav-item {{ 'active' if active==key }}" {% if active==key %}aria-current="page"{% endif %} href="{{ url_for('main.'+key) }}">{{ icon(ico) }}<span>{{ label }}</span>{% if active==key %}<span class="nav-dot"></span>{% endif %}</a>{% endfor %}
+{% if current_user.role=='admin' %}<div class="nav-label second">ADMINISTRATION</div><a class="nav-item {{ 'active' if active=='admin' and section|default('')!='operations' }}" href="{{ url_for('admin.dashboard') }}">{{ icon('users') }}Admin workspace</a><a class="nav-item {{ 'active' if section|default('')=='operations' }}" href="{{ url_for('admin.operations') }}">{{ icon('server') }}Local server</a>{% endif %}
+</nav>
+<div class="sidebar-bottom"><div class="private-note">{{ icon('shield') }}<div>Private by design<small>Your records belong to you.</small></div></div>
+<a class="nav-item {{ 'active' if active=='guide' }}" href="{{ url_for('main.guide') }}">{{ icon('book') }}Quick start guide</a>
+<a class="nav-item {{ 'active' if active=='settings' }}" href="{{ url_for('main.settings') }}">{{ icon('settings') }}Workspace settings</a>
+<form action="{{ url_for('auth.logout') }}" method="post">{{ csrf() }}<button class="nav-item logout" type="submit">{{ icon('logout') }}Sign out</button></form>
+<div class="sidebar-footer">SENTINEL LAB <span>v1.2 / LOCAL</span></div></div>
+</aside>
+<div class="app-shell"><header class="topbar"><button class="icon-button mobile-menu" id="menu-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar">{{ icon('menu') }}</button><div class="breadcrumb">Workspace {{ icon('chevron') }} <strong>{{ title }}</strong></div><div class="topbar-right"><form class="top-search" action="{{ url_for('main.history') }}">{{ icon('search') }}<input name="q" aria-label="Search scans" placeholder="Search your scans…"><kbd>/</kbd></form><span class="top-divider"></span>{% include 'analysis_updates.html' %}<span class="avatar">{{ current_user.name[:1]|upper }}</span><div class="profile-label">{{ current_user.name }}<small>{{ 'Administrator' if current_user.role=='admin' else 'Personal workspace' }}</small></div></div></header>
+<main id="main-content" class="main-content">
+{% else %}<main id="main-content">{% endif %}
+{% with messages=get_flashed_messages(with_categories=true) %}{% for category,message in messages %}<div class="alert {{ category }}" role="status">{{ icon('info') }}<span>{{ message }}</span></div>{% endfor %}{% endwith %}
+{% if error %}<div class="alert error" role="alert" data-server-error>{{ icon('info') }}<span>{{ error }}</span></div>{% endif %}
+{% block content %}{% endblock %}
+{% if current_user.is_authenticated %}<footer class="page-footer"><span>{{ icon('shield') }} Your workspace. Your next informed decision.</span><span>External checks by consent · No local file execution</span></footer>{% endif %}
+</main>{% if current_user.is_authenticated %}</div>{% endif %}
+</body></html>

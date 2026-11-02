@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "sha256": "REPLACE_WITH_EXACT_SCAN_SHA256",
+  "tool": "OpenBin",
+  "model": "REPLACE_WITH_ACTUAL_MODEL_AND_CONFIGURATION",
+  "reviewer": "REPLACE_WITH_REVIEWER_NAME",
+  "findings": [
+    {
+      "title": "REPLACE_WITH_OBSERVED_BEHAVIOR",
+      "severity": "info",
+      "detail": "REPLACE_WITH_REVIEWED_INTERPRETATION_AND_LIMITS",
+      "evidence": "REPLACE_WITH_FUNCTION_ADDRESS_AND_SUPPORTING_CODE_OBSERVATION"
+    }
+  ]
+}
