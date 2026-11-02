@@ -1,6 +1,6 @@
 {% extends 'base.html' %}{% from 'macros.html' import icon,csrf,filebox %}
 {% block content %}
-<div class="page-heading"><div><div class="eyebrow muted">LOCAL REVERSE ENGINEERING</div><h1>See what is inside.</h1><p>Decompile a Windows binary with OpenBin's Ghidra extractor, on your own server.</p></div><span class="badge success">{{ icon('shield') }} Local processing</span></div>
+<div class="page-heading"><div><div class="eyebrow muted">LOCAL REVERSE ENGINEERING</div><h1>OpenBin decompilation</h1><p>Decompile a Windows binary with OpenBin's Ghidra extractor, on your own server.</p></div><span class="badge success">{{ icon('shield') }} Local processing</span></div>
 <div class="form-layout"><section class="panel form-panel"><div class="panel-header"><div><h2>OpenBin decompilation</h2><p>Inspect code without running the uploaded program.</p></div><span class="step-mark">01</span></div>
 <form method="post" enctype="multipart/form-data" class="padded-form" data-download-form>{{ csrf() }}
 {{ filebox('file','Windows executable','.exe,.dll','Native x86/x64 EXE or DLL · Up to 10 MiB','scan') }}

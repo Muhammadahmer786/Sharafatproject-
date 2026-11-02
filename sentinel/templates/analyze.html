@@ -1,6 +1,6 @@
 {% extends 'base.html' %}{% from 'macros.html' import icon,csrf,filebox %}
 {% block content %}
-<div class="page-heading"><div><div class="eyebrow muted">FILE INTELLIGENCE</div><h1>A closer look at your file.</h1><p>Gather the evidence before you decide what to trust.</p></div><span class="badge success">{{ icon('shield') }} Static analysis only</span></div>
+<div class="page-heading"><div><div class="eyebrow muted">FILE INTELLIGENCE</div><h1>File analysis</h1><p>Gather the evidence before you decide what to trust.</p></div><span class="badge success">{{ icon('shield') }} Static analysis only</span></div>
 <div class="form-layout"><section class="panel form-panel"><div class="panel-header"><div><h2>Start an assessment</h2><p>Your file stays unexecuted throughout inspection.</p></div><span class="step-mark">01</span></div><form method="post" enctype="multipart/form-data" class="padded-form" data-processing-form>{{ csrf() }}
 {{ filebox('file','Windows executable','.exe,.dll','Native x86/x64 EXE or DLL · Up to 10 MiB','scan') }}
 <div class="subsection-label">OPTIONAL EVIDENCE SOURCES</div>
