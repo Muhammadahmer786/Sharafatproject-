@@ -1,5 +1,7 @@
 # Local OpenBin AI analysis
 
+**New client installation:** follow the [complete client setup guide](CLIENT_SETUP.md), including system requirements, Docker/OpenBin and the C:-only runtime alternative. The workstation paths below describe the existing verified installation, not a mandatory drive layout for every client.
+
 The **Local AI** workspace (`/ai`) runs OpenBin's Ghidra extraction followed by actual local Ollama inference. It is an experimental static triage aid. It is not a trained malware classifier, antivirus certification, or a measured accuracy claim.
 
 ## Use
@@ -29,13 +31,15 @@ Run explicitly as the Windows account operating the application:
 
 ```powershell
 .venv\Scripts\python tools/install-local-ai.py --directory D:/SentinelRuntime/ai
-pwsh -NoProfile -File tools/start-local-ai.ps1 -PullModel
+pwsh -NoProfile -File tools/start-local-ai.ps1 -RuntimeDirectory D:/SentinelRuntime/ai -PullModel
 .venv\Scripts\python run.py
 ```
 
 The installer uses the official pinned release and verifies its checksum before extraction. It never installs a Windows service, opens firewall ports or pulls models on ordinary application startup. `run.py` starts and monitors the installed runtime when the default endpoint is configured. It retries a stopped process with a 60-second backoff and stops only the runtime it started. A listener already using that port is left alone; the application's model check validates the actual service. For a reused Ollama service, its operator is responsible for its configuration; the application additionally rejects cloud model aliases and remote metadata. Download failures can be retried explicitly. A checksum failure needs operator inspection of the cached archive.
 
-Use `pwsh -NoProfile -File .\start.ps1 -Supervise` for server restart supervision, keeping its terminal open. No Windows service or automatic startup task is installed. The direct Python command works without changing PowerShell execution policy. Application logs are under `instance/logs`; managed model logs are in the runtime directory on D:.
+The bundled installer rejects C: and drive roots. For C:-only computers, follow the [manual pinned runtime installation](CLIENT_SETUP.md#7-install-the-local-ai-runtime-and-model); simply changing `--directory` to C: is not sufficient. Pass the actual `-RuntimeDirectory` to the PowerShell launcher, which does not read that setting from `.env`.
+
+Use `pwsh -NoProfile -File .\start.ps1 -Supervise` for server restart supervision, keeping its terminal open. No Windows service or automatic startup task is installed. The direct Python command works without changing PowerShell execution policy. Application logs are under `instance/logs`; managed model logs are in the selected runtime directory.
 
 Set `LOCAL_AI_URL`, `LOCAL_AI_MODEL`, `LOCAL_AI_RUNTIME_DIR`, `LOCAL_AI_TIMEOUT` and `OPENBIN_WORKER_IMAGE` in the private `.env` if needed. The runtime directory defaults to `D:/SentinelRuntime/ai`; automatic runtime startup requires the default `http://127.0.0.1:11434` endpoint. Only literal loopback HTTP URLs and locally installed GGUF models are accepted. The default inference timeout is 600 seconds; the enclosing disposable process adds a bounded allowance for inspection/decompilation. Changing models requires fresh evaluation and sufficient memory.
 

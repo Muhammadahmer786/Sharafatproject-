@@ -4,41 +4,21 @@ GitHub distributes the source code. The application continues to run on the clie
 
 ## First installation
 
-1. Install Git, Python 3.12, PowerShell 7, and WSL 2 (or an existing supported Docker Linux-container engine). The verified machine has 16 GB RAM. Allow sufficient disk space for the Python environment, WSL, Docker images and the approximately 2.5 GB Qwen3 model. Initial setup needs internet.
-2. Clone the repository and install the Python dependencies:
+**Send the client the [complete step-by-step setup guide](CLIENT_SETUP.md).** It explains system requirements, installing Git/Python/PowerShell, cloning or downloading a ZIP, Docker, OpenBin, local Ollama/Qwen3, VirusTotal configuration, administrator enrollment and checking every main workflow.
 
-   ```powershell
-   git clone https://github.com/Muhammadahmer786/Sharafatproject-.git sentinel-lab
-   cd sentinel-lab
-   py -3.12 -m venv .venv
-   .venv\Scripts\python -m pip install -r requirements.lock.txt
-   Copy-Item -LiteralPath .env.example -Destination .env
-   .venv\Scripts\python run.py migrate
-   ```
+The installation order is:
 
-3. Follow [Local deployment](LOCAL_DEPLOYMENT.md) to install the Docker/OpenBin workers. For the bundled WSL route, set `SENTINEL_WSL_DISTRO=SentinelLab` in `.env` after installing that distribution. Run PowerShell scripts with PowerShell 7, for example `pwsh -NoProfile -File tools/setup-workers.ps1 -IncludeOpenBin`.
-4. Follow [Local AI setup](LOCAL_AI.md) to install Ollama and pull Qwen3. The default runtime directory is `D:\SentinelRuntime\ai`. If the client has no D: drive, choose a suitable directory, pass it to the setup tools and set the same `LOCAL_AI_RUNTIME_DIR` in `.env`.
-5. Configure the client's provider key, create an administrator and secure local state:
+1. Check Windows x64, virtualization, RAM and storage requirements; install the basic tools.
+2. Clone the repository (recommended for later updates), or extract its ZIP.
+3. Create the Python environment, install locked dependencies and initialize private configuration/database.
+4. Choose a dedicated WSL engine on a data drive, or Docker Desktop with Linux containers.
+5. Build and verify the document/PE and OpenBin workers **before creating accounts**.
+6. Install the local AI runtime and model; configure the client's own VirusTotal key if external checks are required.
+7. Create the administrator, secure local files, start the server, enroll TOTP and complete the guide's workflow checks.
 
-   ```powershell
-   .venv\Scripts\python tools/configure-virustotal.py
-   .venv\Scripts\python run.py create-admin
-   pwsh -NoProfile -File tools/secure-local-files.ps1
-   .venv\Scripts\python run.py
-   ```
+The bundled WSL installer refuses the system drive and the bundled AI installer refuses C:. The full guide includes a Docker Desktop plus manual pinned AI runtime path for C:-only computers. Do not just substitute C: into the data-drive installer commands.
 
-   VirusTotal configuration is needed only for external checks. The client chooses their administrator credentials privately. Keep the server terminal open, sign in at `http://127.0.0.1:5050`, and enroll the administrator's authenticator in Account security.
-
-6. From a second terminal in the same folder, check setup:
-
-   ```powershell
-   .venv\Scripts\python tools/check_workers.py --include-openbin
-   .venv\Scripts\python run.py doctor
-   ```
-
-   Use the included inert `examples/synthetic-demo.exe` to verify the Local AI workflow. It is a parsing fixture; do not execute it. A completed fixture scan verifies operation, not malware-detection accuracy.
-
-Only copy `.env.example` on first installation. Existing `.env`, `instance/.secret`, databases and account keys must be preserved. The repository deliberately has no shared login or provider API key.
+Only copy `.env.example` on first installation. Existing `.env`, `instance/.secret`, databases and account keys must be preserved. The repository deliberately has no shared login or provider API key. Initial downloads require internet; cloning alone does not install workers/models. [Local deployment](LOCAL_DEPLOYMENT.md) remains the detailed operations/recovery reference.
 
 ## Receive later updates
 

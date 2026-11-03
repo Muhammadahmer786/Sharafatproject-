@@ -1,5 +1,7 @@
 # Local deployment and operator runbook
 
+**Installing on a new client PC?** Use the [step-by-step client setup guide](CLIENT_SETUP.md) for requirements, cloning/ZIP downloads, both Docker routes, model installation, first login and acceptance checks. This runbook contains additional operator procedures and historical details about the developer's workstation.
+
 Scope: one operator-managed workstation/server, browser access on that same machine, SQLite metadata and no hosting or LAN exposure. The separate external hash/URL/IP/file workspace requires a VirusTotal key and disclosure consent. Local OpenBin decompilation uses an offline container; the [Local AI workspace](LOCAL_AI.md) adds local model inference and saved evidence-linked reports.
 
 ## Current handover status — 2 November 2026
@@ -17,11 +19,11 @@ OpenBin v0.10.0 and BINNY v0.1.0-beta.3 binaries and source are downloaded under
 Use Python 3.12 and a supported Docker Linux-container runtime. Extract source to an operator-owned folder on a local disk, not a shared/cloud-synced directory. Run PowerShell there:
 
 ```powershell
-python -m venv .venv
+py -3.12 -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.lock.txt
 Copy-Item -LiteralPath .env.example -Destination .env
 .venv\Scripts\python run.py migrate
-.\tools\secure-local-files.ps1
+pwsh -NoProfile -File .\tools\secure-local-files.ps1
 ```
 
 Copy .env.example only on a **new** installation. Never overwrite existing .env, instance/.secret or database files. A blank SECRET_KEY preserves the generated instance/.secret. If supplying a key, use a persistent random value of at least 32 characters. Changing it invalidates sessions and prevents decrypting existing authenticator enrollments and assigned private-key vaults. Never rotate or replace it without an explicit vault migration procedure.
@@ -41,11 +43,10 @@ Set `SENTINEL_WSL_DISTRO=SentinelLab` in private `.env` for this route; leave it
 Build the workers:
 
 ```powershell
-.\tools\install-openbin.ps1
-.\tools\setup-workers.ps1 -IncludeOpenBin -CacheDirectory D:\SentinelRuntime\downloads
+pwsh -NoProfile -File .\tools\setup-workers.ps1 -IncludeOpenBin -CacheDirectory D:\SentinelRuntime\downloads
 ```
 
-These scripts download official tools, build the pinned Python file/document worker, download the Ghidra image archive and build the offline adapter. They do not execute samples or log into OpenBin. Build-time downloads require internet; processing containers disable networking. The OpenBin/BINNY ZIP and Ghidra archive SHA-256 checksums are pinned. The correct OpenBin release tag is `openbin-v0.10.0`; the former `v0.10.0` URL returned 404. See THIRD_PARTY.md. Keep the cache and WSL virtual disk on a drive with sufficient free space.
+This builds the pinned Python file/document worker, downloads the official Ghidra image archive and builds the offline adapter. It does not execute samples or log into OpenBin. Build-time downloads require internet; processing containers disable networking. The Ghidra archive SHA-256 is pinned. The correct OpenBin release tag is `openbin-v0.10.0`; the former `v0.10.0` URL returned 404. See THIRD_PARTY.md. Keep the cache and WSL virtual disk on a drive with sufficient free space. The separate `tools/install-openbin.ps1` script downloads optional upstream OpenBin/BINNY CLI tools; it is not required for the web workers or local AI pipeline.
 
 **Do not replace the local adapter with openbin decompile:** the inspected upstream CLI uploads decompiled code. BINNY's inspected startup also requires upstream authentication. Use:
 

@@ -2,6 +2,8 @@
 
 A local workspace for VirusTotal hash, URL, IP and file checks, static Windows PE assessment, local OpenBin/Ghidra AI triage, reviewed evidence, and encrypted document protection in lossless PNG images. Originally built for a university FYP, now hardened for an operator-managed local deployment. No public hosting is configured.
 
+**Installing on the client's PC? Start with the [complete step-by-step client setup guide](docs/CLIENT_SETUP.md).** It covers system requirements, Git clone or ZIP download, Python, Docker, OpenBin, local AI/model downloads, API configuration, first login, verification, daily startup, backups and updates. It includes both a data-drive setup and a C:-only alternative. Plan for Windows 11 x64, 16 GB RAM (32 GB recommended) and about 40 GB free SSD space for the full setup; see the guide for qualifications and current vendor requirements.
+
 **Handover status:** accounts/admin activity, encrypted account keys, separate VirusTotal checks, document protection, local OpenBin and automatic local AI triage are implemented. WSL 2 / Docker and Ollama/Qwen3 assets are installed on this PC's D: drive. Real OpenBin → local model → saved report → notification/download acceptance passed with an inert executable; see [verification](docs/VERIFICATION.md). Customer acceptance still requires administrator enrollment, workload/security validation and representative AI evaluation. See [remaining work](docs/REMAINING_FEATURES.md) and [local deployment](docs/LOCAL_DEPLOYMENT.md).
 
 ## Get the project from GitHub
@@ -13,7 +15,7 @@ git clone https://github.com/Muhammadahmer786/Sharafatproject-.git sentinel-lab
 cd sentinel-lab
 ```
 
-For a private repository, the repository owner must give the client access first. Follow [GitHub handover and updates](docs/GITHUB_HANDOVER.md) for first installation and subsequent `git pull` updates.
+For a private repository, the repository owner must give the client access first. Follow the [client setup guide](docs/CLIENT_SETUP.md) for first installation and [GitHub handover and updates](docs/GITHUB_HANDOVER.md) for subsequent `git pull` updates.
 
 The repository contains source and setup scripts. Each computer needs its own Python environment, local Docker/OpenBin workers, AI model, accounts and private configuration. Git does not transfer the developer's API key, accounts, encryption keys or installed runtimes. Initial setup downloads require internet; a clone alone does not install these components.
 
@@ -42,7 +44,7 @@ Follow [LOCAL_DEPLOYMENT.md](docs/LOCAL_DEPLOYMENT.md) for clean installation, a
 - Local OpenBin web upload/download and operator CLI, using a Ghidra adapter with network disabled, RAM-backed scratch space, bounded concurrency and local provenance. Direct Docker and a dedicated WSL 2 engine are supported.
 - Versioned migration, staged SQLite restore, verified backups, operations/readiness screens, restricted local files and bounded logs.
 
-The **Local AI** workspace automatically connects OpenBin/Ghidra extraction to local Qwen3 inference, evidence validation, private history, cancellation, progress and JSON/PDF reports. Its model/runtime live on D:. See [local AI setup and evaluation](docs/LOCAL_AI.md). The original supervised import and raw decompilation workflows remain available. No trained malware classifier or measured detection accuracy is claimed. No findings or no provider detections does not establish safety.
+The **Local AI** workspace automatically connects OpenBin/Ghidra extraction to local Qwen3 inference, evidence validation, private history, cancellation, progress and JSON/PDF reports. Its model/runtime use a separately configured local directory (D: on the development workstation). See [local AI setup and evaluation](docs/LOCAL_AI.md). The original supervised import and raw decompilation workflows remain available. No trained malware classifier or measured detection accuracy is claimed. No findings or no provider detections does not establish safety.
 
 ## Operator commands
 
