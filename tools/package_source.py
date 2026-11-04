@@ -6,7 +6,7 @@ import zipfile
 root=Path(__file__).resolve().parents[1]
 target=root/"artifacts"/"Sentinel-Lab-Local-Source.zip"
 target.parent.mkdir(exist_ok=True)
-top=["README.md","requirements.txt","requirements.lock.txt","pytest.ini","run.py","start.ps1",
+top=["README.md","requirements.txt","requirements.lock.txt","pytest.ini","run.py","start.ps1","setup_client.py","Setup-and-Run.cmd",
      "Dockerfile","ghidra.Dockerfile","compose.yaml",".dockerignore",".env.example",".gitignore",".gitattributes"]
 files=[root/name for name in top]
 allowed={"sentinel":{'.py','.html','.css','.js'},"tests":{'.py','.cjs'},"tools":{'.py','.ps1','.sh'},"integrations":{'.py'},

@@ -4,9 +4,11 @@ GitHub distributes the source code. The application continues to run on the clie
 
 ## First installation
 
+**Quick route:** download/clone the complete project, extract it if zipped, and double-click **`Setup-and-Run.cmd`**. Or, with Python 3.12 installed, run `py -3.12 setup_client.py`. The launcher handles dependency installation and local worker/model setup. Follow its prompts, rerun after any required reboot, then enroll the administrator's authenticator in the browser. See [automatic setup](CLIENT_SETUP.md#automatic-setup--recommended).
+
 **Send the client the [complete step-by-step setup guide](CLIENT_SETUP.md).** It explains system requirements, installing Git/Python/PowerShell, cloning or downloading a ZIP, Docker, OpenBin, local Ollama/Qwen3, VirusTotal configuration, administrator enrollment and checking every main workflow.
 
-The installation order is:
+For operators choosing manual setup, the installation order is:
 
 1. Check Windows x64, virtualization, RAM and storage requirements; install the basic tools.
 2. Clone the repository (recommended for later updates), or extract its ZIP.
@@ -16,7 +18,7 @@ The installation order is:
 6. Install the local AI runtime and model; configure the client's own VirusTotal key if external checks are required.
 7. Create the administrator, secure local files, start the server, enroll TOTP and complete the guide's workflow checks.
 
-The bundled WSL installer refuses the system drive and the bundled AI installer refuses C:. The full guide includes a Docker Desktop plus manual pinned AI runtime path for C:-only computers. Do not just substitute C: into the data-drive installer commands.
+Individual runtime installers require `--allow-system-drive` to use C:; the automatic launcher supplies it when needed. The full guide also retains a Docker Desktop plus manual pinned AI runtime path for C:-only computers. Do not just substitute C: into the manual data-drive commands without their explicit option.
 
 Only copy `.env.example` on first installation. Existing `.env`, `instance/.secret`, databases and account keys must be preserved. The repository deliberately has no shared login or provider API key. Initial downloads require internet; cloning alone does not install workers/models. [Local deployment](LOCAL_DEPLOYMENT.md) remains the detailed operations/recovery reference.
 

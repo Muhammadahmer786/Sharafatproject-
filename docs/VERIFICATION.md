@@ -1,5 +1,14 @@
 # Verification record
 
+## Automatic Windows client setup — 4 November 2026
+
+- **27 installer regression tests passed** (`tests/test_client_setup.py`, 6.61s): first-use configuration, original-secret preservation, interrupted checkpoints/virtual environments, exact locked dependency verification, account/API preservation, stop-before-account-creation on worker failure, C: opt-in, WSL registry ownership and global/per-distro configuration preservation, cache quarantine and verified publication, and redirect rejection on a real loopback test server. Windows/network installation boundaries use substitutes and temporary fixtures; these tests do not install host runtimes.
+- **16 related tests passed** (10.69s): worker downloads, WSL worker transport, installed AI runtime supervision and web-server cleanup. **33 JavaScript tests passed** across document progress, analysis notifications and AI UI.
+- Actual Windows CMD launcher smoke test passed from a path containing spaces and an apostrophe. It invoked a deliberately harmless PowerShell stub and forwarded its successful exit. Both new PowerShell scripts parsed without syntax errors. The Python `--plan`/`--help` entry points ran without installing anything. Documentation links/anchors and current lock-file versions were checked.
+- Independent source review found four recovery gaps: a venv with Python but missing pip, incomplete locked-package checks, overwritten per-distro WSL configuration, and corrupt Ubuntu/Ollama archives preventing reruns. Regression tests reproduced the gaps before fixes; the final focused tests above pass.
+- The complete Python suite was attempted repeatedly, but long tool sessions disconnected before returning a result. No complete full-suite pass is claimed for this change. The focused results above are the available fresh evidence.
+- No clean client Windows installation, real UAC/reboot sequence, multi-GB download or newly installed engine/model was performed during this change. The existing workstation/application configuration and credentials were not replaced. A fresh client installation still requires the documented acceptance checklist; administrator authenticator enrollment and the client's own provider access remain personal/operator steps.
+
 ## Automatic local OpenBin AI triage — 2 November 2026
 
 Full regression suite: **263 passed in 658.26s**, exit 0 (`artifacts/qa/local-ai-full.txt`). The final shutdown/submission race test was added afterward; **13 focused lifecycle/evaluation tests passed in 22.82s**, including that new case. Client suites: **33 tests passed** across document progress, analysis-update state/UI and local-AI UI. The earlier focused adapter/routes/migration suite passed 87 tests before review fixes.

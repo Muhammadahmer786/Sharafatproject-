@@ -4,6 +4,54 @@ Follow this guide on the **client's computer** for a new installation. The proje
 
 **Repository:** [Muhammadahmer786/Sharafatproject-](https://github.com/Muhammadahmer786/Sharafatproject-). If the repository is private, the owner must invite the client's GitHub account and the client must accept that invitation first.
 
+## Automatic setup — recommended
+
+You can use the automatic launcher instead of typing the manual installation commands below.
+
+1. Open the repository → **Code → Download ZIP**, then right-click the ZIP → **Extract All**. Alternatively, clone the repository if Git is already installed.
+2. Open the extracted project folder containing `run.py` and **double-click `Setup-and-Run.cmd`**. Keep its terminal window open. Run it as the Windows account that will operate Sentinel Lab.
+3. Approve Windows prompts for Python/WSL installation. If setup says **RESTART REQUIRED**, restart Windows yourself, then double-click the same file again. Setup never reboots without you.
+4. When prompted, enter your administrator email, name and password. Enter your own VirusTotal API key in the hidden prompt, or press Enter to skip external checks. There is no shared/default login.
+5. The launcher opens **http://127.0.0.1:5050** after installation and local fixture checks. Sign in and complete **Workspace settings → Account security → Two-step verification** using your authenticator. Keep the launcher window open while using the site.
+
+**Already have Python 3.12?** From the project folder, the equivalent entry point is:
+
+```powershell
+py -3.12 setup_client.py
+```
+
+The launcher prepares the Python environment and exact locked packages, initializes the database without replacing existing secrets, reuses the selected Docker engine or installs a dedicated WSL/Docker engine, builds document/PE and OpenBin workers, downloads verified Ollama and Qwen3 assets, performs document/OpenBin and actual local AI fixture checks, creates an administrator if none exists, restricts private file permissions, creates a backup, checks readiness and starts the site. It uses Windows' built-in PowerShell; separate Git, PowerShell 7, Java, MySQL and upstream BINNY installs are unnecessary for this route.
+
+The Windows bootstrap uses the official Python install manager through Windows App Installer (`winget`) if Python is missing. Windows 11 normally provides App Installer; an organization that removes/blocks it or Microsoft Store may need its IT administrator to enable it or install Python 3.12 first. Firmware virtualization, Windows approval/reboots, a person's password/API key and enrolling an authenticator on their device cannot be supplied by this script. An unavailable internet connection, insufficient disk space or blocked software policy produces a clear stop instead of disabling protections.
+
+**Storage:** existing configured runtime paths are retained. New installations prefer a suitable non-system fixed drive with 40 GiB free, otherwise `%LOCALAPPDATA%\SentinelLab\runtime` on C:. The installer supports C: explicitly and preserves global `.wslconfig`. It only resumes an existing dedicated distro when its registered disk location matches; it never unregisters distributions. To choose the storage folder yourself:
+
+```powershell
+py -3.12 setup_client.py --runtime-directory "D:\SentinelRuntime"
+```
+
+Useful options:
+
+```powershell
+py -3.12 setup_client.py --plan
+py -3.12 setup_client.py --setup-only
+py -3.12 setup_client.py --no-browser
+py -3.12 setup_client.py --configure-api
+py -3.12 setup_client.py --port 5051
+```
+
+`--plan` makes no changes and does not read private settings. `--setup-only` performs setup and its private prompts without starting the website. `--configure-api` lets you enter/change the client key privately. Use the chosen port in your browser if you change it.
+
+**Later launches:** double-click the same launcher. It checks actual prerequisites and completed stage fingerprints, downloads/builds again when required, starts the local services and opens the site. Passwords, existing accounts, assigned keys and API configuration are preserved. Press **Ctrl+C** to stop the website. There is no automatic Windows startup service.
+
+**Interrupted setup:** run the same launcher again. Checkpoints are in ignored `instance/setup-state.json`; they contain stage fingerprints, not passwords/API keys. Ubuntu/Ollama files are verified before installation; invalid caches are retained with `.rejected-...` names for inspection, and reruns download fresh copies. An interrupted asset download may restart that download, while completed stages are retained. Never delete `instance` to fix setup: it contains the original secret and customer data.
+
+The automatic check runs only the included inert fixture; it does not execute programs or submit files to VirusTotal. The client still needs to enroll their authenticator and check their external API access with authorized data. A ready local installation does not establish AI detection accuracy. The launcher is covered by isolated Windows/setup regression tests; a complete fresh Windows installation with real downloads/UAC/reboot has not been performed as part of this change. Complete [the workflow checklist](#10-verify-every-main-workflow) on the actual client PC.
+
+## Manual setup reference
+
+The remaining sections are available for operators who prefer manual installation, diagnosis or recovery. They are not a list of extra steps to repeat after the automatic launcher succeeds.
+
 Read the requirements and choose a Docker route before starting. Run each command in order, wait for it to finish, and **stop if it reports an error**. Commands below are for PowerShell, not Command Prompt. Unless a step says otherwise, use the same normal Windows account throughout. Do not copy the developer's `.env`, `.venv`, database or account keys.
 
 ## Contents
@@ -48,7 +96,7 @@ Docker Desktop has its own Windows servicing and WSL requirements; check its [cu
 | --- | --- | --- |
 | Git | Clone and receive future updates | Step 2; optional only for ZIP installs |
 | Python 3.12, 64-bit | Run the web application and setup tools | Step 2 |
-| PowerShell 7 (`pwsh`) | Run the supplied setup scripts | Step 2 |
+| PowerShell 7 (`pwsh`) | Run the manual commands below | Step 2; automatic launcher uses built-in Windows PowerShell |
 | Python packages | Flask, document processing and other dependencies | Locked dependency file in step 4 |
 | Docker Linux-container engine | Isolate key generation, document processing and binary parsing | Choose one route in step 5 |
 | Document/PE worker and OpenBin/Ghidra worker | Document protection/recovery and local analysis | Step 6 |
@@ -65,7 +113,7 @@ You do **not** need Node.js, a separate Java installation, MySQL, an OpenAI key 
 | Has D: (or another non-system data drive), no existing WSL configuration, and you want the bundled dedicated engine | **Route A:** dedicated `SentinelLab` WSL distribution. This is the route used on the existing verified workstation. |
 | Has only C:, already uses Docker Desktop, or already has a WSL setup you want to retain | **Route B:** Docker Desktop with Linux containers. For C:-only AI storage, use the manual pinned runtime instructions in step 7. |
 
-The bundled WSL installer refuses the Windows system drive; the bundled AI installer refuses C:. **Changing their `--directory` to C: will not work.** Route B below explains the alternative. Do not install both Docker routes for this project.
+Without an explicit override, the individual WSL installer refuses the Windows system drive and the AI installer refuses C:. **Changing only `--directory` to C: will not work.** The automatic launcher supplies the supported override and preserves WSL configuration; manual Route B below remains an alternative. Do not install both Docker routes for this project.
 
 Examples use a project folder under your Windows profile and runtime storage at `D:\SentinelRuntime` or `C:\SentinelRuntime`. If using E: or another location, substitute it consistently in commands and `.env`.
 
@@ -278,7 +326,7 @@ For another data drive, change **both commands and `.env`**. `start-local-ai.ps1
 
 ### With only C: — manual installation of the same pinned runtime
 
-The bundled Python AI installer rejects C:. The following explicit manual procedure uses the same official ZIP and checksum at a path the application's runtime manager supports. It has been checked against the installer/runtime code; it has not been validated by rebuilding a fresh C:-only client PC.
+The bundled Python AI installer rejects C: unless `--allow-system-drive` is supplied; the automatic launcher handles that flag. The following manual procedure remains available and uses the same official ZIP/checksum at a supported path. It has been checked against the installer/runtime code; it has not been validated by rebuilding a fresh C:-only client PC.
 
 Open **PowerShell 7**, in the project folder. Ensure the full setup has the disk allowance in step 1. Run this entire block once; it stops if the target runtime already exists or the download checksum differs:
 
