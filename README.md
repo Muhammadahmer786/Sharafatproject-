@@ -31,6 +31,8 @@ The existing virtual environment and metadata instance are preserved. From this 
 
 Open [Sentinel Lab](http://127.0.0.1:5050/). Accounts are issued by the local operator; registration is closed by default. No default credentials are shipped. Processing requires the isolated Docker worker and shows a setup error when unavailable. Native mode is a deliberate demonstration-only option, never a silent fallback.
 
+**Let users create their own accounts:** after installation, follow [Enable user signup](docs/CLIENT_SETUP.md#enable-user-signup-on-this-pc). Set `ALLOW_REGISTRATION=1` in that PC's private `.env` and restart with `run.py`; the login page then shows **Create an account**. New accounts receive ordinary user access and an assigned encryption key pair. This local setting is not transferred by Git.
+
 The server starts and monitors the installed local model runtime automatically. Keep its terminal open. For server retry supervision with PowerShell 7, use `pwsh -NoProfile -File .\start.ps1 -Supervise`. No Windows service or automatic startup task is installed.
 
 Follow [LOCAL_DEPLOYMENT.md](docs/LOCAL_DEPLOYMENT.md) for clean installation, accounts, worker setup and recovery. Windows / Python 3.12 / SQLite / Waitress is the verified application configuration. MySQL is optional and unverified.

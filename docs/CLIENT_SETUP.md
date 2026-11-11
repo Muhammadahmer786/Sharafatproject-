@@ -425,7 +425,21 @@ The administrator workspace requires this enrollment and verified sign-in. Enabl
 
 An enrolled administrator can open **Admin workspace → Accounts → Add an account**, enter the user's name/email, and create it. Give the displayed **single-use, 30-minute setup code** privately to that user. They open **Recover your account** from the login page, enter their email/code and choose a password. There is no email delivery service.
 
-Alternatively, the Windows operator can run `.venv\Scripts\python.exe run.py create-user` and follow its hidden password prompts. Keep public registration disabled. Users access their own history and assigned keys; they do not receive other users' private keys. Private-key export requires fresh authentication and a separate backup passphrase; keep that exported encrypted key and passphrase safe.
+Alternatively, the Windows operator can run `.venv\Scripts\python.exe run.py create-user` and follow its hidden password prompts. Registration is disabled by default; use the following optional procedure when users should create their own accounts. Users access their own history and assigned keys; they do not receive other users' private keys. Private-key export requires fresh authentication and a separate backup passphrase; keep that exported encrypted key and passphrase safe.
+
+### Enable user signup on this PC
+
+Complete the installation and worker checks first. Signup uses the document worker to assign each new user's public/private key pair, so Docker must be running.
+
+1. Stop the running website with **Ctrl+C** in its server terminal.
+2. From the project folder, run `notepad .env`. Change the existing registration line to `ALLOW_REGISTRATION=1`, save and close Notepad. Preserve all other settings and the original server secret.
+3. Start the website with `.venv\Scripts\python.exe run.py` and keep its terminal open.
+4. Visit **http://127.0.0.1:5050/login**, choose **Create an account**, or open **http://127.0.0.1:5050/register** directly.
+5. Enter a full name, email address and a password of **12-128 characters**. Successful signup signs the user in and assigns their encryption key pair automatically. Self-registration always creates an ordinary user; administrator creation remains an operator action.
+
+The `.env` file is private and excluded from Git. Cloning or pulling the repository does not enable signup on another PC; set the flag on each installation that needs it. To close signup later, set it back to `0` and restart; existing accounts can still sign in.
+
+While signup is enabled, use the direct `run.py` command for later launches. The current automatic setup launcher requires `ALLOW_REGISTRATION=0` and stops on a customized value without changing it. Doctor's operator-managed deployment profile also reports **Account provisioning** as needing attention while signup is open; `/ready` is not green in that configuration. This does not prevent the website or signup from running.
 
 ## 10. Verify every main workflow
 
